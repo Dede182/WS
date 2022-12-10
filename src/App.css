@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800&family=Shippori+Mincho+B1:wght@400;500;600;700;800&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -9,11 +11,3 @@
     }
 }
 
-@layer components{
-  .btn-black{
-    @apply px-4 py-[4px] text-xs  text-center text-white font-bold bg-black rounded-2xl hover:opacity-75
-  }
-  .btn-white{
-    @apply px-4 py-[2px] text-xs  text-center text-black font-bold bg-white border-2 rounded-2xl hover:opacity-75
-  }
-}

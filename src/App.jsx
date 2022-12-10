@@ -1,16 +1,11 @@
 import React from 'react'
 import './App.css';
 import { GiSpinningBlades } from 'react-icons/gi'
+import Login from './login/Login';
 const App = () => {
   return (
-    <div className='flex justify-center h-[40vh] items-center  text-5xl'>
-      <button type="button" class="flex flex-row text-[#4D4D4D] items-center" >
-    
-          <GiSpinningBlades class="animate-spin text-[#40C057] h-20 w-20 mr-3 ..."  />
-      
-        Processing...
-      </button>
-    
+    <div className='flex justify-center h-[100vh] bg-secondary font-shippo items-center  text-5xl'>
+      <Login/>
     </div>
   )
 }
