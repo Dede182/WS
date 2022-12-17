@@ -20,7 +20,7 @@ const Register = () => {
   const users = useSelector((state) => state.users.users);
   const userStatus = useSelector(userState);
   const apiLogin = (name,email, password,password_confirmation) => {
-    dispatch(fetchRegister({ name,email, password,password_confirmation }))
+    dispatch(fetchRegister({ name,email,password,password_confirmation }))
     
   }
   if (userStatus == "successful") {

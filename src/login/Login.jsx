@@ -38,8 +38,13 @@ const Login = () => {
 
   const onSubmitHandler = (e) => {
     e.preventDefault();
-    apiLogin(input.email, input.password)
-    localStorage.setItem("account", JSON.stringify( [input.email, input.password ]))
+    try{
+      apiLogin(input.email, input.password)
+      localStorage.setItem("account", JSON.stringify( [input.email, input.password ]))
+    }
+    catch(err){
+      console.error('something wrong',err)
+    }
 
 
   };

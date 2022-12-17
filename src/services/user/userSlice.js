@@ -4,19 +4,27 @@ import axios from "axios";
 const baseUrl = "http://127.0.0.1:8000/api/v1/login";
 const logoutUrl = "http://127.0.0.1:8000/api/v1/logout";
 const registerUrl = "http://127.0.0.1:8000/api/v1/register"
+const profileUrl = "http://127.0.0.1:8000/api/v1/profile"
 const initialState = {
     users : [],
     status : "idle",
+    token : "",
     error : null
 }
 
 export const fetchLogin = createAsyncThunk('users/login',async(initialUser)=>{
-    const response = await axios.post(baseUrl,initialUser);
+    try{
+        const response = await axios.post(baseUrl,initialUser)
+    }
+    catch (err) {
+        const response = err;
+    }
     // console.log(response.data)
     return response.data;
 })
-export const fetchRegister = createAsyncThunk('users/register',async(initialUser)=>{
-    const response = await axios.post(registerUrl,initialUser);
+export const fetchRegister = createAsyncThunk('users/register',async(initial)=>{
+    const response = await axios.post(registerUrl,initial);
+
     return response.data;
 })
 export const fetchLogout = createAsyncThunk('users/logout',async()=>{
@@ -24,7 +32,14 @@ export const fetchLogout = createAsyncThunk('users/logout',async()=>{
 
     return response.data;
 })
-
+export const fetchProfile = createAsyncThunk('users',async(initialUser)=>{
+    const response = await axios.get(profileUrl,{
+        headers:{
+            authorization: `Bearer ${initialUser.token}`,
+        }
+    })
+    return response.data;
+})
 export const userSlice = createSlice({
     name : 'users',
     initialState,
@@ -32,6 +47,8 @@ export const userSlice = createSlice({
     extraReducers(builder){
         builder
             .addCase(fetchLogin.pending,(state,action)=>{
+                // console.log(state,action)
+
                 state.status = "loading"
             })
             .addCase(fetchLogin.fulfilled,(state,action)=>{
@@ -40,13 +57,14 @@ export const userSlice = createSlice({
             })
             .addCase(fetchLogin.rejected,(state,action)=>{
                 state.status = "failed";
-                state.error = action.error.message;
+                state.error = action.error;
+                console.log(state.error);
             })
             .addCase(fetchLogout.fulfilled,(state,action)=>{
                 state.users = action.payload
             })
             .addCase(fetchRegister.pending,(state,action)=>{
-                console.log(action)
+                console.log(state,action)
                 state.status="loading"
             })
             .addCase(fetchRegister.fulfilled,(state,action)=>{
@@ -57,6 +75,12 @@ export const userSlice = createSlice({
             .addCase(fetchRegister.rejected,(state,action)=>{
                 state.status = "failed";
                 state.error = action.error.message;
+            })
+            .addCase(fetchProfile.fulfilled,(state,action)=>{
+               
+                state.status="successful"
+                state.users = action.payload
+                console.log(state.users)
             })
 
     }
