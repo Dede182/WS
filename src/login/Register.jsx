@@ -1,10 +1,8 @@
-import {useEffect} from 'react'
+
 import { useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { fetchRegister } from '../services/user/userSlice'
 import Input from '../components/Input'
-import { userAuth, userState } from '../services/user/userSlice'
 import { Link, useNavigate } from 'react-router-dom'
+import { useFetchRegisterMutation } from '../services/user/UserApi'
 const Register = () => {
 
   const [input, setInput] = useState({
@@ -14,44 +12,36 @@ const Register = () => {
     passwordConfirmation : '',
    
   })
+  const [ ApiRegister,{ data:auth,isLoading,isSuccess,isError,error }] = useFetchRegisterMutation()
+
   const navigate = useNavigate();
 
-  const dispatch = useDispatch();
-  const users = useSelector((state) => state.users.users);
-  const userStatus = useSelector(userState);
-  const apiLogin = (name,email, password,password_confirmation) => {
-    dispatch(fetchRegister({ name,email,password,password_confirmation }))
+  const fetchRegister = (name,email, password,password_confirmation) => {
+    ApiRegister({ name,email,password,password_confirmation })
     
   }
-  if (userStatus == "successful") {
-    console.log(users)
-  }
 
-  if (users?.success) {
-    localStorage.setItem("token", JSON.stringify( users?.token))
-    navigate('/dashboard');
+
+  if (isSuccess) {
+    console.log(auth)
+
+    localStorage.setItem("token", JSON.stringify( auth?.token))
+    navigate('/admin');
+  }
+  if(isError){
+    console.log(error);
   }
 
   const onSubmitHandler = (e) => {
     e.preventDefault();
-    apiLogin(input.name,input.email, input.password,input.passwordConfirmation)
-    localStorage.setItem("account", JSON.stringify( [input.name,input.email, input.password ]))
-
-
+    fetchRegister(input.name,input.email, input.password,input.passwordConfirmation)
   };
   
-  useEffect(() => {
-    const account = JSON.parse(localStorage.getItem("account"));
-    console.log(account);
-    if(account) {
-      setInput({...input,name:account[0],email : account[1],password: account[2]})
-      // apiLogin( input.email ,input.password)
-    }
   
-  }, [])
 
   return (
-    <div className='h-[90vh] flex flex-col w-[486px]'>
+    <div className='flex justify-center h-[100vh] bg-secondary font-shippo items-center  text-5xl'>
+          <div className='h-[90vh] flex flex-col w-[486px]'>
       <div className="flex w-full justify-center  font-bold font-cinzel text-bold text-[28px]">
         <p>SHOP</p>
       </div>
@@ -99,6 +89,8 @@ const Register = () => {
      
       </div>
     </div>
+    </div>
+  
   )
 }
 

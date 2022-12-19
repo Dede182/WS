@@ -1,9 +1,15 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ["./index.html", "./src/**/*.{js,jsx}",],
+  content: ["./index.html", "./src/**/*.{js,jsx}",
+  'node_modules/flowbite-react/**/*.{js,jsx,ts,tsx}'],
+  
   mode: "jit",
   theme: {
     extend: {
+      padding:{
+          'ysm' : '32px',
+          'xsm' : '56px'
+      },
       colors: {
         primary: "#353535",
         secondary: "#F1F1F3",
@@ -34,5 +40,7 @@ module.exports = {
       }
     },
   },
-  plugins: [],
+  plugins: [
+    require('flowbite/plugin')
+  ],
 }

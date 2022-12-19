@@ -14,15 +14,15 @@ const createRequest = (url)=>({url,headers:Apiheaders});
 
 
 
-export const productApi = createApi({
-    reducerPath:'productApi',
+export const orderApi = createApi({
+    reducerPath:'orderApi',
     baseQuery : fetchBaseQuery({baseUrl}),
     endpoints: (builder)=>({
-        getProducts:builder.query({
-            query: (search="")=>createRequest(`/products?search=${search}`)
+        getOrders:builder.query({
+            query: (search="")=>createRequest(`/orders`)
         })
     })
 })
 
 
-export const {useGetProductsQuery} = productApi;
+export const {useGetOrdersQuery} = orderApi;

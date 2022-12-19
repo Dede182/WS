@@ -1,67 +1,73 @@
-import {useEffect} from 'react'
+import { useEffect } from 'react'
 import { useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { fetchLogin } from '../services/user/userSlice'
 import Input from '../components/Input'
 import { userAuth, userState } from '../services/user/userSlice'
 import { Link, useNavigate } from 'react-router-dom'
+import { useFetchLoginsMutation } from '../services/user/UserApi'
 const Login = () => {
 
   const [input, setInput] = useState({
     email: '',
     password: '',
-   
+
   })
   const navigate = useNavigate();
   const [isChecked, setIsChecked] = useState(false);
-  const dispatch = useDispatch();
-  const users = useSelector((state) => state.users.users);
-  const userStatus = useSelector(userState);
+ 
+  const [ ApiLogin,{ data:auth,isLoading,isSuccess,isError,error }] = useFetchLoginsMutation()
+
   const apiLogin = (email, password) => {
-    dispatch(fetchLogin({ email, password }))
-    
+    ApiLogin({email, password});
   }
-  if (userStatus == "successful") {
-    console.log(users)
+  if(isLoading){
+    console.log('loading')
+  }
+  if (isSuccess) {
+    console.log('success')
+    console.log(auth)
+  }
+  if(isError){
+    console.log(error);
   }
 
-  if (users?.success) {
-    localStorage.setItem("token", JSON.stringify( users?.token))
+  if (isSuccess) {
+    localStorage.setItem("token", JSON.stringify(auth?.token))
 
     if (isChecked) {
-      localStorage.setItem("account", JSON.stringify( [input.email, input.password ]))
+      localStorage.setItem("account", JSON.stringify([input.email, input.password]))
     } else {
       localStorage.removeItem("account")
     }
-    navigate('/dashboard');
+    navigate('/admin');
   }
 
   const onSubmitHandler = (e) => {
     e.preventDefault();
-    try{
+    try {
       apiLogin(input.email, input.password)
-      localStorage.setItem("account", JSON.stringify( [input.email, input.password ]))
+      localStorage.setItem("account", JSON.stringify([input.email, input.password]))
     }
-    catch(err){
-      console.error('something wrong',err)
+    catch (err) {
+      console.error('something wrong', err)
     }
 
 
   };
-  
+
   useEffect(() => {
     const account = JSON.parse(localStorage.getItem("account"));
     console.log(account);
-    if(account) {
+    if (account) {
       setIsChecked(true)
-      setInput({...input,email : account[0],password: account[1]})
+      setInput({ ...input, email: account[0], password: account[1] })
       // apiLogin( input.email ,input.password)
     }
-  
+
   }, [])
 
   return (
-    <div className='h-[80vh] flex flex-col w-[486px]'>
+    <div className='flex justify-center h-[100vh] bg-secondary font-shippo items-center  text-5xl'>
+        <div className='h-[80vh] flex flex-col w-[486px]'>
       <div className="flex w-full justify-center  font-bold font-cinzel text-bold text-[28px]">
         <p>SHOP</p>
       </div>
@@ -84,10 +90,10 @@ const Login = () => {
           </div>
           <div className="w-full flex justify-between  mt-[14px]">
             <div className="flex items-center ">
-              <input type="checkbox" 
+              <input type="checkbox"
                 onChange={() => setIsChecked(!isChecked)}
                 checked={isChecked}
-                        className='w-[18px] h-[18px] !bg-[#F1F1F3] color-[#F1F1F3]    ' />
+                className='w-[18px] h-[18px] !bg-[#F1F1F3] color-[#F1F1F3]    ' />
               <span className='text-[13px] text-[#7C7C7C] ml-1'>Remember me</span>
             </div>
             <div className="flex items-center">
@@ -101,11 +107,13 @@ const Login = () => {
             </button>
           </div>
 
-          <Link to ="/register"><p className='text-[13px] text-center underline mt-5'>Doesn't have an account yet? Sign up</p></Link>
+          <Link to="/register"><p className='text-[13px] text-center underline mt-5'>Doesn't have an account yet? Sign up</p></Link>
 
         </form>
       </div>
     </div>
+    </div>
+    
   )
 }
 
