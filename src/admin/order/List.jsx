@@ -32,6 +32,9 @@ const List = () => {
     if (isSuccess) {
         console.log(orders?.data)
     }
+    if (isError){
+        console.log(error);
+    }
 
     function Status(status) {
         if (status == "Delivered") {
@@ -105,7 +108,7 @@ const List = () => {
                                         <tr key={order.id} className="bg-white border-b text-black font-medium ">
                                             <td className="p-4 font-medium  flex items-center gap-x-2">
                                                 
-                                                <img src={order.orderItems[0]?.product.productImage} className="w-6 h-6 object-cover rounded-sm" alt="" />
+                                                <img src={order.orderer.profileImage} className="w-10 h-10 object-cover rounded-full" alt="" />
                                                 <p>{order.orderer.name}</p>
                                             </td>
                                             <td className="p-4">
